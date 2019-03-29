@@ -1,7 +1,7 @@
 ##########################################################
 ## leukemia and natural gas compressor station analysis ##
 ## Rachel Nethery                                       ##
-## last edit 5/9/18                                     ##
+## last edit 3/29/19                                    ##
 ##########################################################
 
 ## load packages and read in necessary functions ##
@@ -14,10 +14,10 @@ library(BayesTree)
 library(dbarts)
 library(rgdal)
 library(xtable)
-source('iw_overlap.R')
-source('rn_2spl.R')
-source('aceBB.R')
-source('bartalone_noBB.R')
+source('functions/pw_overlap.R')
+source('functions/bartspl.R')
+source('functions/aceBB.R')
+source('functions/bartalone_noBB.R')
 
 ## read in ACS confounder data ##
 acs<-read.csv('data/acs_2014endyr.csv',skip=1)
@@ -147,7 +147,7 @@ hist(bartps[which(test2$expose==1)],col=rgb(0.8,0.8,0.8,0.5),add=T,xlab="",ylab=
 test2$ps<-bartps
 
 ## identify the RO and RN ##
-RO<-iw_overlap(ps=bartps,E=test2$expose,a=.1*(max(bartps)-min(bartps)),b=10)
+RO<-pw_overlap(ps=bartps,E=test2$expose,a=.1*(max(bartps)-min(bartps)),b=10)
 
 ## overlap stratified histograms of the PS ##
 hist(bartps[which(RO==1)],col=rgb(0.1,0.1,0.1,0.5),xlim=c(0,1),breaks=10,xlab="",ylab='',main='')
@@ -163,7 +163,7 @@ mean(bartfit[[4]])
 quantile(bartfit[[4]],c(.025,.975))
 
 ## estimate causal effect of exposure on leukemia using BART+SPL ##
-rnfit<-rn_2spl(datall=test2[,c(2,ncol(test2)-1,ncol(test2),3:(ncol(test2)-2))],RO=RO)
+rnfit<-bartspl(datall=test2[,c(2,ncol(test2)-1,ncol(test2),3:(ncol(test2)-2))],RO=RO)
 mean(rnfit[[1]])
 quantile(rnfit[[1]],c(.025,.975))
 
@@ -248,7 +248,7 @@ hist(bartps[which(test2$expose==1)],col=rgb(0.8,0.8,0.8,0.5),add=T,xlab="",ylab=
 test2$ps<-bartps
 
 ## identify the RO and RN ##
-RO<-iw_overlap(ps=bartps,E=test2$expose,a=.1*(max(bartps)-min(bartps)),b=10)
+RO<-pw_overlap(ps=bartps,E=test2$expose,a=.1*(max(bartps)-min(bartps)),b=10)
 
 ## overlap stratified histograms of the PS ##
 hist(bartps[which(RO==1)],col=rgb(0.1,0.1,0.1,0.5),xlim=c(0,1),breaks=10,xlab="",ylab='',main='')
@@ -265,7 +265,7 @@ mean(bartfit[[4]])
 quantile(bartfit[[4]],c(.025,.975))
 
 ## estimate causal effect of exposure on leukemia using BART+SPL ##
-rnfit<-rn_2spl(datall=test2[,c(2,ncol(test2)-1,ncol(test2),3:(ncol(test2)-2))],RO=RO)
+rnfit<-bartspl(datall=test2[,c(2,ncol(test2)-1,ncol(test2),3:(ncol(test2)-2))],RO=RO)
 mean(rnfit[[1]])
 quantile(rnfit[[1]],c(.025,.975))
 

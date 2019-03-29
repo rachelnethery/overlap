@@ -1,8 +1,6 @@
-bartalone<-function(xtr,ytr,xte,nburn=10000,nsamp=5000){
+bartalone<-function(xtr,ytr,xte){
   
-  bartps<-bart(x.train=xtr,y.train=ytr,x.test=xte,nskip=nburn,ndpost=nsamp)
-  # ppd_test<-pnorm(t(apply(bartps$yhat.test,1,function(x) rnorm(n=length(x),mean=x,sd=1))))
-  # ppd_train<-pnorm(t(apply(bartps$yhat.train,1,function(x) rnorm(n=length(x),mean=x,sd=1))))
+  bartps<-bart(x.train=xtr,y.train=ytr,x.test=xte)
   ppd_test<-pnorm(bartps$yhat.test)
   ppd_train<-pnorm(bartps$yhat.train)
   ppd_test_mean<-apply(ppd_test,2,mean)
